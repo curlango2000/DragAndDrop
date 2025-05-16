@@ -66,11 +66,12 @@
 <body>
 <div id="message-area"></div>
 <div class="grid-container">
-  <button class="button red-button" onclick="buttonAction('Button 1 was pressed!', 'sound1')"></button>
-  <button class="button green-button" onclick="playSound('sound2')"></button>
-  <button class="button blue-button" ></button>
-  <button class="button purple-button"></button>
+  <button class="button red-button" onclick="buttonAction('Re was pressed!', 'sound1','red')"></button>
+  <button class="button green-button" onclick="buttonAction('Green pressed!','sound2','green')"></button>
+  <button class="button blue-button" onclick="buttonAction('Blue was pressed!', 'sound1','blue')"></button>
+  <button class="button purple-button" onclick="buttonAction('Purple was pressed!', 'sound2','purple')"></button>
 </div>
+
 <audio id="sound1" src="sounds/shortBeep.wav"></audio>
 <audio id="sound2" src="sounds/beep2.wav"></audio>
 
@@ -78,6 +79,8 @@
 
 <script>
   const messageArea = document.getElementById('message-area');
+  let buttonsPressed = [];
+  let clicks = 0;
 
   function showMessage(message) {
     messageArea.textContent = message;
@@ -91,11 +94,21 @@
     }
   }
 
-  function buttonAction(message, soundId) {
-    showMessage(message);
+  function buttonAction(message, soundId, colorPressed) {
+    // showMessage(message);
     playSound(soundId);
+    buttonsPressed.push(colorPressed);
+    clicks = clicks + 1;
+    if (clicks==4) {
+      buttonsPressed.forEach(myFunction);
+      alert(mensaje);
+      clicks = 0;
+    }
   }
-
+  let mensaje = ""
+  function myFunction(value, index, array) {
+    mensaje += value + " ";
+  }
 </script>
 </body>
 </html>
