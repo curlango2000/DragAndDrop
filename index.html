@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag and Drop (iPad Compatible)</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: row;
+      align-items: center; /* Center items horizontally in the body */
+    }
+    .draggable {
+      width: 180px;
+      height: 80px;
+      background-color: lightblue;
+      border: 1px solid blue;
+      text-align: center;
+      line-height: 80px;
+      cursor: grab;
+      margin: 10px;
+      touch-action: none; /* Prevent default touch scrolling */
+    }
+
+    .dropzone {
+      width: 200px;
+      height: 150px;
+      background-color: lightgray;
+      border: 2px dashed gray;
+      margin: 20px;
+      text-align: center;
+      line-height: 150px;
+    }
+
+    .drag-over {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+
+<div id="draggable1" class="draggable" draggable="true">Drag Me</div>
+<div id="draggable2" class="draggable" draggable="true">Drag Me Too</div>
+
+<div id="dropzone1" class="dropzone">Drop Here</div>
+<div id="dropzone2" class="dropzone">Or Here</div>
+
+<script>
+  const draggables = document.querySelectorAll('.draggable');
+  const dropzones = document.querySelectorAll('.dropzone');
+
+  let draggedItem = null;
+
+  draggables.forEach(draggable => {
+    draggable.addEventListener('dragstart', (e) => {
+      draggedItem = e.target;
+      draggable.classList.add('dragging');
+    });
+
+    draggable.addEventListener('dragend', () => {
+      draggable.classList.remove('dragging');
+      draggedItem = null;
+    });
+
+    // For iPad compatibility, prevent default touch behavior and handle touch events
+    draggable.addEventListener('touchstart', (e) => {
+      draggedItem = e.target;
+      draggable.classList.add('dragging');
+      // Store the initial touch position
+      draggable.dataset.startX = e.touches[0].clientX;
+      draggable.dataset.startY = e.touches[0].clientY;
+    });
+
+    draggable.addEventListener('touchmove', (e) => {
+      if (!draggedItem) return;
+
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - parseFloat(draggable.dataset.startX);
+      const deltaY = touch.clientY - parseFloat(draggable.dataset.startY);
+
+      draggable.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+      // Prevent scrolling while dragging
+      e.preventDefault();
+    });
+
+    draggable.addEventListener('touchend', () => {
+      if (!draggedItem) return;
+      draggable.classList.remove('dragging');
+      draggable.style.transform = ''; // Reset position
+
+      // Simulate drop on the last touched element if it's a dropzone
+      const touch = event.changedTouches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+      if (target && target.classList.contains('dropzone')) {
+        target.appendChild(draggedItem);
+        target.classList.remove('drag-over');
+      }
+      draggedItem = null;
+    });
+  });
+
+  dropzones.forEach(dropzone => {
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Allow drop
+      dropzone.classList.add('drag-over');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('drag-over');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      if (draggedItem) {
+        dropzone.appendChild(draggedItem);
+      }
+      dropzone.classList.remove('drag-over');
+    });
+
+    // For iPad touch events on dropzones
+    dropzone.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // Prevent potential scrolling
+    });
+
+    dropzone.addEventListener('touchmove', (e) => {
+      e.preventDefault(); // Prevent scrolling while potentially over a dropzone
+    });
+  });
+</script>
+
+</body>
+</html>
