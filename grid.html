@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>4 Buttons in a 2x2 Grid</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+      margin: 0; /* Remove default body margin */
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto; /* Two columns of equal width */
+      gap: 10px; /* Spacing between grid items */
+      width: 400px; /* Adjust as needed */
+      height: 400px;
+    }
+
+    .button {
+      padding: 15px 20px;
+      font-family: Chalkboard;
+      font-size: 30px;
+      border-radius: 12px;
+      color: white;
+      border: none;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
+    .button:active {
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+
+    .button:hover {
+      background-color: white;
+      color: white;
+    }
+
+    .red-button {
+      background-color: red;
+      border: 2px solid red;
+    }
+    .green-button {
+      background-color: green;
+      border: 2px solid green;
+    }
+    .blue-button {
+      background-color: dodgerblue;
+      border: 2px solid dodgerblue;
+    }
+    .purple-button {
+      background-color: purple;
+      border: 2px solid purple;
+    }
+
+    #message-area {
+      font-size: 18px;
+      font-weight: bold;
+      color: navy;
+    }
+  </style>
+</head>
+<body>
+<div id="message-area"></div>
+<div class="grid-container">
+  <button class="button red-button" onclick="buttonAction('Button 1 was pressed!', 'sound1')"></button>
+  <button class="button green-button" onclick="playSound('sound2')"></button>
+  <button class="button blue-button" ></button>
+  <button class="button purple-button"></button>
+</div>
+<audio id="sound1" src="sounds/shortBeep.wav"></audio>
+<audio id="sound2" src="sounds/beep2.wav"></audio>
+
+
+
+<script>
+  const messageArea = document.getElementById('message-area');
+
+  function showMessage(message) {
+    messageArea.textContent = message;
+  }
+
+  function playSound(soundId) {
+    const soundElement = document.getElementById(soundId);
+    if (soundElement) {
+      soundElement.currentTime = 0; // Reset the sound to the beginning
+      soundElement.play();
+    }
+  }
+
+  function buttonAction(message, soundId) {
+    showMessage(message);
+    playSound(soundId);
+  }
+
+</script>
+</body>
+</html>

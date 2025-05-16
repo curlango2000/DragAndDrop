@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Number Blocks (Sequential Appearance)</title>
+  <style>
+    body {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center; /* flex-start; */
+      gap: 10px;
+      margin: 20px;
+    }
+
+    .number-block {
+      width: 60px;
+      height: 60px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0; /* Initially hidden */
+      transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out; /* Fade and slight scale */
+      transform: scale(0.8);
+      position: page /* To control stacking */
+    }
+
+    .number-block.visible {
+      opacity: 1; /* Make visible */
+      transform: scale(1);
+    }
+
+    .number-block.hidden {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+
+    .number-block.highlight {
+      background-color: lightgreen;
+      border-color: green;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  const body = document.body;
+  let blocksCreated = 0;
+  let currentBlock = null;
+  const numberOfBlocksToCreate = 15;
+  const creationInterval = 2000; // 1 second
+  let clickedBlocks = 0;
+
+  function createAndShowBlock() {
+    const randomNumber = Math.floor(Math.random() * 100);
+    const block = document.createElement('div');
+
+    block.classList.add('number-block');
+    block.textContent = randomNumber;
+
+    block.addEventListener('click', () => {
+      if (randomNumber%2==0) {
+        clickedBlocks = clickedBlocks + 1;
+      }
+      block.classList.toggle('highlight');
+      console.log(`Clicked block with number: ${randomNumber}`);
+    });
+
+    body.appendChild(block);
+
+    // Position the new block at the center initially
+    const bodyRect = body.getBoundingClientRect();
+    const blockWidth = 60;
+    const blockHeight = 60;
+    block.style.left = `${bodyRect.width / 2 - blockWidth / 2 + window.scrollX}px`;
+    block.style.top = `${bodyRect.height / 2 - blockHeight / 2 + window.scrollY}px`;
+
+    // Fade in the new block
+    setTimeout(() => {
+      block.classList.add('visible');
+    }, 10);
+
+    // If there was a previous block, hide it
+    if (currentBlock) {
+      currentBlock.classList.remove('visible');
+      currentBlock.classList.add('hidden');
+      // Remove the old block from the DOM after the transition
+      setTimeout(() => {
+        if (currentBlock && currentBlock.parentNode === body) {
+          body.removeChild(currentBlock);
+        }
+      }, 500); // Match the CSS transition duration
+    }
+
+    currentBlock = block;
+    blocksCreated++;
+
+    if (blocksCreated >= numberOfBlocksToCreate) {
+      clearInterval(intervalId);
+      alert(`Clicked correctly on ${clickedBlocks} blocks.`);
+    }
+  }
+
+  const intervalId = setInterval(createAndShowBlock, creationInterval);
+</script>
+
+</body>
+</html>

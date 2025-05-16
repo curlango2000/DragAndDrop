@@ -19,6 +19,15 @@
       margin: 10px;
       touch-action: none; /* Prevent default touch scrolling */
     }
+    .number-block.visible {
+      opacity: 1; /* Make visible */
+      transform: scale(1);
+    }
+
+    .number-block.hidden {
+      opacity: 0;
+      transform: scale(0.5);
+    }
 
     .dropzone {
       width: 200px;
@@ -40,9 +49,11 @@
 <div id="draggable1" class="draggable" draggable="true">Drag Me</div>
 <div id="draggable2" class="draggable" draggable="true">Drag Me Too</div>
 
-<div id="dropzone1" class="dropzone">Drop Here</div>
-<div id="dropzone2" class="dropzone">Or Here</div>
+<div id="dropzone1" class="dropzone">Pares</div>
+<div id="dropzone2" class="dropzone">Impares</div>
 
+<a href="grid.html">Simon </a>
+<a href="test.html"> Test </a>
 <script>
   const draggables = document.querySelectorAll('.draggable');
   const dropzones = document.querySelectorAll('.dropzone');
